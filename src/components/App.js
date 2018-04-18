@@ -1,42 +1,18 @@
 // @flow
 import React, { Component } from "react";
 import styled, { injectGlobal } from "styled-components";
+import { withTodoHandlers } from "../containers/Todo/hocs";
 import Todos from "./Todos";
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       newTodo: "",
-      todos: [
-        {
-          value: "Use Redux!",
-          completed: false,
-        },
-      ],
     };
   }
 
   handleChange = ({ target: { value: newTodo } }) => this.setState({ newTodo });
-
-  addTodo = value =>
-    value &&
-    this.setState({ todos: [...this.state.todos, { value, completed: false }], newTodo: "" });
-
-  removeTodo = idx =>
-    this.setState({ todos: this.state.todos.filter((todo, todoIdx) => todoIdx !== idx) });
-
-  toggleTodoComplete = idx =>
-    this.setState({
-      todos: this.state.todos.map(
-        (todo, todoIdx) =>
-          todoIdx !== idx
-            ? todo
-            : {
-                ...todo,
-                completed: !todo.completed,
-              },
-      ),
-    });
 
   render() {
     return [
@@ -47,13 +23,13 @@ class App extends Component {
             placeholder="What needs to be done?"
             value={this.state.newTodo}
             onChange={this.handleChange}
-            onKeyPress={e => e.key === "Enter" && this.addTodo(this.state.newTodo)}
+            onKeyPress={e =>
+              e.key === "Enter" &&
+              this.props.addTodo(this.state.newTodo) &&
+              this.setState({ newTodo: "" })
+            }
           />
-          <Todos
-            todos={this.state.todos}
-            removeTodo={this.removeTodo}
-            toggleTodoComplete={this.toggleTodoComplete}
-          />
+          <Todos />
         </TodoContainer>
       </Container>,
     ];
@@ -119,4 +95,4 @@ const AddTodoInput = styled.input`
   box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
 `;
 
-export default App;
+export default withTodoHandlers(App);

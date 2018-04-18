@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { withTodoHandlers } from "../containers/Todo/hocs";
 
-const TodoItem = ({ idx, todo, removeTodo, toggleTodoComplete }) => (
+const TodoItem = ({ idx, todo, removeTodo, toggleTodo }) => (
   <Item key={todo.id}>
-    <Completed onClick={() => toggleTodoComplete(idx)} />
-    <Value>{todo.value}</Value>
-    <Remove onClick={() => removeTodo(idx)}>×</Remove>
+    <Completed onClick={() => toggleTodo(todo.id)} checked={todo.completed} />
+    <Value>{todo.text}</Value>
+    <Remove onClick={() => removeTodo(todo.id)}>×</Remove>
   </Item>
 );
 
@@ -52,4 +53,4 @@ const Remove = styled.div`
   }
 `;
 
-export default TodoItem;
+export default withTodoHandlers(TodoItem);
